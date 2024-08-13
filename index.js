@@ -27,7 +27,9 @@ const port = 3000;
 const cors = require('cors');
 
 // Allow CORS for all routes by default
-app.use(cors()); 
+app.use(cors({
+  origin: '*', // Allow all origins (for development purposes)
+}));
 
 // Serve static files from the 'public' directory
 app.use(express.static('public')); 
