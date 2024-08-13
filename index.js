@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const cors = require('cors');
-
+const path = require('path'); 
 app.use(cors()); // Allow CORS for all routes by default
 // Route for the home page
 app.get('/', (req, res) => {
