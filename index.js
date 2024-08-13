@@ -13,9 +13,9 @@ app.get('/', (req, res) => {
 app.use(express.static('public_html'));
 
 // Route to send the JavaScript file
-app.get('/adPopup.js', (req, res) => {
-    res.sendFile(path.join(__dirname, 'adPopup.js'));
-});
+// app.get('/adPopup.js', (req, res) => {
+    // res.sendFile(path.join(__dirname, 'adPopup.js'));
+// });
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
