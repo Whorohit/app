@@ -45,48 +45,22 @@
 // });
 
 
-const http = require('http');
+const express = require('express') 
+const path = require('path') 
+const app = express() 
 
-// File system module used for accessing files in nodejs
-const fs = require("fs");  
-const port = 3000;
+// Static Middleware 
+app.use(express.static(path.join(__dirname, 'public'))) 
 
-// Helper function 
-function readAndServe(path, res)   
-{
-    fs.readFile(path,function(err, data)
-    {
-        console.log(data);
+// View Engine Setup 
+app.set('views', path.join(__dirname, 'views')) 
+app.set('view engine', 'ejs') 
 
-        // res.setHeader('Content-Type', 'text/html');
-        res.end(data);
-    })
-}
-const server = http.createServer((req, res) => {  
-  const url = req.url;
-  const method = req.method;
+app.get('/', function(req, res){ 
+	res.render('Demo') 
+}) 
 
-  /* Serving static files on specific Routes */
-  if(url === "/") 
-  {
-      readAndServe("./index.html",res) 
-
-      /* The file named index.html will be sent 
-         as a response when the index url is requested */
-  }
-  else if(url === "/about")
-  {
-      readAndServe("./about.html",res) 
-      /*The about.html file will be sent as a response when 
-        /about is requested */
-  }
-  else
-  {
-      res.end("Path not found"); 
-      /* All paths other than / and /about will send an error as 
-      a response */
-  }
-});
-server.listen(port, () => {
-  console.log(`Server running at http://:${port}/`);
-});
+app.listen(8080, function(error){ 
+	if(error) throw error 
+	console.log("Server created Successfully") 
+}) 
