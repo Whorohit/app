@@ -1,4 +1,4 @@
-(function() {
+(function () {
     // Check if the ad has been shown in the current session
     // if (sessionStorage.getItem('adShown') === 'true') return;
 
@@ -63,7 +63,7 @@
     const ourPowerOfSpan = document.createElement('span');
     ourPowerOfSpan.className = 'ourPowerOf';
     ourPowerOfSpan.innerHTML = "Powered By <span style='color: #206cd7;'>Monetiscope</span>";
-    ourPowerOfSpan.querySelector("span").addEventListener("click", function() {
+    ourPowerOfSpan.querySelector("span").addEventListener("click", function () {
         window.location.href = "https://monetiscope.com";
     });
 
@@ -90,23 +90,25 @@
     gptScript.async = true;
     document.head.appendChild(gptScript);
 
-    gptScript.onload = function() {
+    gptScript.onload = function () {
         window.googletag = window.googletag || { cmd: [] };
-        googletag.cmd.push(function() {
-            googletag.defineSlot('/22824118996/MS_techinsyders_Pop-up', [[300, 250], [336, 280], [250, 250]], 'monetiscopepopupad').addService(googletag.pubads());
-            googletag.pubads().set('page_url', 'techinsyders.com');
+        googletag.cmd.push(function () {
+            // /22824118996/MS_techinsyders_Pop-up
+            googletag.defineSlot('/23143462395/Test_300x250', [[300, 250], [336, 280], [250, 250]], 'monetiscopepopupad').addService(googletag.pubads());
+            // googletag.pubads().set('page_url', 'techinsyders.com');
+            googletag.pubads().set('page_url', 'https://aictecareerportal.com/');
             googletag.enableServices();
         });
     };
 
-    gptScript.onerror = function() {
+    gptScript.onerror = function () {
         console.error('Failed to load Google GPT script.');
     };
 
     // Show the ad after 3 seconds
-    setTimeout(function() {
+    setTimeout(function () {
         if (window.googletag) {
-            googletag.cmd.push(function() {
+            googletag.cmd.push(function () {
                 googletag.display('monetiscopepopupad');
             });
             fixedWidthDiv.style.display = "block";
@@ -133,7 +135,7 @@
     }, 3000); // 3 seconds delay
 
     // Close button functionality
-    closePopupCross.addEventListener('click', function() {
+    closePopupCross.addEventListener('click', function () {
         adPopup.style.display = 'none';
         adPopup.setAttribute('id', 'ad-closed');
     });
