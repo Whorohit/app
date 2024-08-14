@@ -95,7 +95,7 @@
         googletag.cmd.push(function () {
             // /22824118996/MS_techinsyders_Pop-up
             googletag.defineSlot('/23143462395/Test_300x250', [[300, 250], [336, 280], [250, 250]], 'monetiscopepopupad').addService(googletag.pubads());
-            // googletag.pubads().set('page_url', 'techinsyders.com');
+           
             googletag.pubads().set('page_url', 'https://aictecareerportal.com/');
             googletag.enableServices();
         });
