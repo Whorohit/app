@@ -67,10 +67,13 @@
         window.location.href = "https://monetiscope.com";
     });
 
-    const closePopupCross = document.createElement('i');
+    const closePopupCross = document.createElement('span');
     closePopupCross.id = 'close-popup-cross';
     closePopupCross.className = 'fa-solid fa-x fa-rotate-180 fa-xl';
-    closePopupCross.style.color = "#121211";
+    closePopupCross.style.color = "#121211 "
+    closePopupCross.style.fontSize="200%";
+    closePopupCross.style.cursor = "pointer"; // Opt
+    closePopupCross.textContent = 'X'; // 
 
     closePopupDiv.appendChild(ourPowerOfSpan);
     closePopupDiv.appendChild(closePopupCross);

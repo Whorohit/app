@@ -67,10 +67,13 @@
         window.location.href = "https://monetiscope.com";
     });
 
-    const closePopupCross = document.createElement('i');
+    // Create a span for the close button
+    const closePopupCross = document.createElement('span');
     closePopupCross.id = 'close-popup-cross';
-    closePopupCross.className = 'fa-solid fa-x fa-rotate-180 fa-xl';
     closePopupCross.style.color = "#121211";
+    closePopupCross.style.fontSize = "200%";
+    closePopupCross.style.cursor = "pointer";
+    closePopupCross.textContent = 'X'; // Set the text content to 'X'
 
     closePopupDiv.appendChild(ourPowerOfSpan);
     closePopupDiv.appendChild(closePopupCross);
@@ -93,9 +96,7 @@
     gptScript.onload = function () {
         window.googletag = window.googletag || { cmd: [] };
         googletag.cmd.push(function () {
-            // /22824118996/MS_techinsyders_Pop-up
             googletag.defineSlot('/23143462395/Test_300x250', [[300, 250], [336, 280], [250, 250]], 'monetiscopepopupad').addService(googletag.pubads());
-           
             googletag.pubads().set('page_url', 'https://aictecareerportal.com/');
             googletag.enableServices();
         });
@@ -105,34 +106,39 @@
         console.error('Failed to load Google GPT script.');
     };
 
-    // Show the ad after 3 seconds
-    setTimeout(function () {
-        if (window.googletag) {
-            googletag.cmd.push(function () {
-                googletag.display('monetiscopepopupad');
-            });
-            fixedWidthDiv.style.display = "block";
-            adPopup.style.cssText = `
-                width: 100%;
-                height: 100vh;
-                position: fixed;
-                top: 0;
-                left: 0;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                background-color: #0000008f;
-                box-sizing: border-box;
-                z-index: 9999999999;
-            `;
-            // sessionStorage.setItem('adShown', 'true'); // Mark the ad as shown
-        } else {
-            console.log("Google GPT is not available.");
-            adPopup.style.display = "none";
-            adPopup.setAttribute("id", "ad-closed");
+    // Show the ad when the user scrolls 200 pixels
+    function showAd() {
+        if (window.scrollY >= 100) { // Adjusted to 200px
+            if (window.googletag) {
+                googletag.cmd.push(function () {
+                    googletag.display('monetiscopepopupad');
+                });
+                fixedWidthDiv.style.display = "block";
+                adPopup.style.cssText = `
+                    width: 100%;
+                    height: 100vh;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    background-color: #0000008f;
+                    box-sizing: border-box;
+                    z-index: 9999999999;
+                `;
+                // sessionStorage.setItem('adShown', 'true'); // Mark the ad as shown
+            } else {
+                console.log("Google GPT is not available.");
+                adPopup.style.display = "none";
+                adPopup.setAttribute("id", "ad-closed");
+            }
+            window.removeEventListener('scroll', showAd); // Remove the scroll event listener after the ad is shown
         }
-    }, 3000); // 3 seconds delay
+    }
+
+    window.addEventListener('scroll', showAd);
 
     // Close button functionality
     closePopupCross.addEventListener('click', function () {
