@@ -13,8 +13,8 @@
             }
         }
         .fixed-width {
-            min-width: 300px;
-            min-height: 600px;
+            min-width: 316px;
+            min-height: 350px;
             display: none;
             background-color: #ffffff;
             border-radius: 4px;
