@@ -13,8 +13,8 @@
             }
         }
         .fixed-width {
-            min-width: 316px;
-            min-height: 350px;
+            min-width: 300px;
+            min-height: 600px;
             display: none;
             background-color: #ffffff;
             border-radius: 4px;
@@ -99,7 +99,7 @@
     gptScript.onload = function () {
         window.googletag = window.googletag || { cmd: [] };
         googletag.cmd.push(function () {
-            googletag.defineSlot('23057650086/MS_Pharma_Pop-up', [[300, 250], [336, 280], [250, 250]], 'monetiscopepopupad').addService(googletag.pubads());
+            googletag.defineSlot('/23057650086/MS_Pharma_Pop-up', [[300, 250], [336, 280], [250, 250]], 'monetiscopepopupad').addService(googletag.pubads());
             googletag.pubads().set('page_url', 'http://pharmabharat.com');
             googletag.enableServices();
         });
