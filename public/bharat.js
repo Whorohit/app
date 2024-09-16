@@ -91,7 +91,7 @@
     document.body.appendChild(adPopup);
 
     // Load Google GPT script with retry mechanism
-    function loadAdScript(retries = 3) {
+    function loadAdScript(retries = 10) {
         const gptScript = document.createElement('script');
         gptScript.src = 'https://securepubads.g.doubleclick.net/tag/js/gpt.js';
         gptScript.async = true;
