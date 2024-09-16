@@ -13,8 +13,8 @@
             }
         }
         .fixed-width {
-            width: 300px; /* Set width to 300px */
-            height: 250px; /* Adjust height to 250px to match typical ad sizes */
+            min-width: 300px; /* Set width to 300px */
+           min-height: 250px; /* Adjust height to 250px to match typical ad sizes */
             display: none;
             background-color: #ffffff;
             border-radius: 4px;
