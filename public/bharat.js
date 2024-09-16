@@ -13,8 +13,8 @@
             }
         }
         .fixed-width {
-            width: 300px; /* Set width to 300px */
-            height: 600px; /* Set height to 600px */
+            min-width: 300px; /* Set width to 300px */
+            min-height: 600px; /* Set height to 600px */
             display: none;
             background-color: #ffffff;
             border-radius: 4px;
