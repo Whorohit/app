@@ -99,7 +99,7 @@
     gptScript.onload = function () {
         window.googletag = window.googletag || { cmd: [] };
         googletag.cmd.push(function () {
-            googletag.defineSlot('/23157923394/MS_Recruite_POP-UP', [[300, 250], [336, 280], [300, 600]], 'monetiscopepopupad').addService(googletag.pubads());
+            googletag.defineSlot('/23157923394/MS_Recruite_POP-UP', [300, 600], 'monetiscopepopupad').addService(googletag.pubads());
             googletag.pubads().set('page_url', 'recruitind.com');
             googletag.enableServices();
             googletag.display('monetiscopepopupad');
