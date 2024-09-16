@@ -13,8 +13,8 @@
             }
         }
         .fixed-width {
-            min-width: 300px; /* Set width to 300px */
-            min-height: 600px; /* Set height to 600px */
+            width: 300px; /* Set width to 300px */
+            height: 250px; /* Adjust height to 250px to match typical ad sizes */
             display: none;
             background-color: #ffffff;
             border-radius: 4px;
@@ -102,6 +102,7 @@
             googletag.defineSlot('/23057650086/MS_Pharma_Pop-up', [[300, 250], [336, 280], [250, 250]], 'monetiscopepopupad').addService(googletag.pubads());
             googletag.pubads().set('page_url', 'http://pharmabharat.com');
             googletag.enableServices();
+            googletag.display('monetiscopepopupad');
         });
     };
 
@@ -112,30 +113,21 @@
     // Show the ad when the user scrolls 200 pixels
     function showAd() {
         if (window.scrollY >= 200) {
-            if (window.googletag) {
-                googletag.cmd.push(function () {
-                    googletag.display('monetiscopepopupad');
-                });
-                fixedWidthDiv.style.display = "block";
-                adPopup.style.cssText = `
-                    width: 100%;
-                    height: 100vh;
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                    background-color: #0000008f;
-                    box-sizing: border-box;
-                    z-index: 9999999999;
-                `;
-            } else {
-                console.log("ad-not-loaded");
-                adPopup.style.display = "none";
-                adPopup.setAttribute("id", "ad-closed");
-            }
+            fixedWidthDiv.style.display = "block";
+            adPopup.style.cssText = `
+                width: 100%;
+                height: 100vh;
+                position: fixed;
+                top: 0;
+                left: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: rgba(0, 0, 0, 0.56);
+                box-sizing: border-box;
+                z-index: 9999999999;
+            `;
             window.removeEventListener('scroll', showAd); // Remove the scroll event listener after the ad is shown
         }
     }
