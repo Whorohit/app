@@ -1,8 +1,6 @@
 (function () {
-    // Create and insert style element
-    const style = document.createElement('style');
-    style.id = 'style';
-    style.innerHTML = `
+    // Create and insert style element using jQuery
+    const $style = $('<style>', { id: 'style' }).html(`
         @media(max-width:459px) {
             .fixed-width {
                 width: 100%;
@@ -54,130 +52,107 @@
             text-align: center;
             cursor: pointer;
         }
-    `;
-    document.head.appendChild(style);
+    `);
+    $('head').append($style);
 
-    // Create ad popup HTML structure
-    const adPopup = document.createElement('div');
-    adPopup.id = 'ad-popup';
+    // Create ad popup HTML structure using jQuery
+    const $adPopup = $('<div>', { id: 'ad-popup' });
+    const $fixedWidthDiv = $('<div>', { class: 'fixed-width' });
+    const $closePopupDiv = $('<div>', { id: 'close-popup' });
+    const $ourPowerOfSpan = $('<span>', { class: 'ourPowerOf' }).html("Powered By <span style='color: #206cd7;'>Monetiscope</span>");
+    const $closePopupCross = $('<span>', { class: 'close-btn', text: 'x' });
 
-    const fixedWidthDiv = document.createElement('div');
-    fixedWidthDiv.className = 'fixed-width';
+    $closePopupDiv.append($ourPowerOfSpan, $closePopupCross);
+    const $monetiscopePopupAd = $('<div>', { id: 'monetiscopepopupad' });
+    $fixedWidthDiv.append($closePopupDiv, $monetiscopePopupAd);
+    $adPopup.append($fixedWidthDiv);
+    $('body').append($adPopup);
 
-    const closePopupDiv = document.createElement('div');
-    closePopupDiv.id = 'close-popup';
-
-    const ourPowerOfSpan = document.createElement('span');
-    ourPowerOfSpan.className = 'ourPowerOf';
-    ourPowerOfSpan.innerHTML = "Powered By <span style='color: #206cd7;'>Monetiscope</span>";
-    ourPowerOfSpan.querySelector("span").addEventListener("click", function () {
+    // Handle click on Powered By Monetiscope
+    $ourPowerOfSpan.on('click', function () {
         window.location.href = "https://monetiscope.com";
     });
 
-    const closePopupCross = document.createElement('span');
-    closePopupCross.className = 'close-btn';
-    closePopupCross.textContent = 'x';
+    // Handle close button click
+    $closePopupCross.on('click', function () {
+        $adPopup.hide().attr('id', 'ad-closed');
+    });
 
-    closePopupDiv.appendChild(ourPowerOfSpan);
-    closePopupDiv.appendChild(closePopupCross);
-
-    const monetiscopePopupAd = document.createElement('div');
-    monetiscopePopupAd.id = 'monetiscopepopupad';
-
-    fixedWidthDiv.appendChild(closePopupDiv);
-    fixedWidthDiv.appendChild(monetiscopePopupAd);
-    adPopup.appendChild(fixedWidthDiv);
-    document.body.appendChild(adPopup);
-
-    // Load Google GPT script with retry
+    // Load Google GPT script with retries
     function loadAdScript(retries = 3) {
-        const gptScript = document.createElement('script');
-        gptScript.src = 'https://securepubads.g.doubleclick.net/tag/js/gpt.js';
-        gptScript.async = true;
-        document.head.appendChild(gptScript);
+        const gptScript = $('<script>', {
+            src: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js',
+            async: true
+        });
 
-        gptScript.onload = function () {
+        gptScript.on('load', function () {
             window.googletag = window.googletag || { cmd: [] };
             googletag.cmd.push(function () {
                 googletag.defineSlot('/23057650086/MS_Pharma_Pop-up', [[300, 250], [336, 280], [250, 250]], 'monetiscopepopupad').addService(googletag.pubads());
                 googletag.pubads().set('page_url', 'http://pharmabharat.com');
                 googletag.enableServices();
             });
-        };
+        });
 
-        gptScript.onerror = function () {
+        gptScript.on('error', function () {
             if (retries > 0) {
                 console.error('Failed to load Google GPT script. Retrying...');
-                setTimeout(function () {
-                    loadAdScript(retries - 1);
-                }, 3000);
+                setTimeout(() => loadAdScript(retries - 1), 3000); // Retry after 3 seconds
             } else {
                 console.error('Failed to load Google GPT script after multiple attempts.');
-                adPopup.style.display = "none";
-                adPopup.setAttribute("id", "ad-closed");
+                $adPopup.hide().attr('id', 'ad-closed');
             }
-        };
+        });
+
+        $('head').append(gptScript);
     }
 
     loadAdScript(); // Initial load
 
-    // Monitor ad container for image load errors and refetch
+    // Monitor ad container for image load errors
     function monitorAdImage(retries = 3) {
-        const adImages = monetiscopePopupAd.getElementsByTagName('img');
+        const adImages = $monetiscopePopupAd.find('img'); // Find all images in the ad container
 
-        Array.from(adImages).forEach(image => {
-            image.onerror = function () {
+        adImages.each(function () {
+            $(this).on('error', function () {
                 if (retries > 0) {
                     console.error('Ad image failed to load. Retrying...');
-
-                    // Refresh the ad slot
-                    googletag.cmd.push(function () {
-                        googletag.pubads().refresh([googletag.slotManager.getSlotById('monetiscopepopupad')]);
-                    });
-
-                    // Retry image monitoring after a short delay
-                    setTimeout(function () {
-                        monitorAdImage(retries - 1);
-                    }, 2000);
+                    googletag.pubads().refresh([googletag.slotManager.getSlotById('monetiscopepopupad')]);
+                    setTimeout(() => monitorAdImage(retries - 1), 2000); // Retry after 2 seconds
                 } else {
                     console.error('Failed to load ad image after multiple attempts.');
-                    image.alt = 'Failed to load ad';
+                    $(this).attr('alt', 'Failed to load ad');
                 }
-            };
+            });
         });
     }
 
-    // Show the ad and monitor for failed image loads
+    // Show ad on scroll
     function showAd() {
-        if (window.scrollY >= 200) {
+        if ($(window).scrollTop() >= 200) {
             if (window.googletag) {
                 googletag.cmd.push(function () {
                     googletag.display('monetiscopepopupad');
                 });
-                fixedWidthDiv.style.display = "block";
-                adPopup.style.cssText = `
-                    width: 100%;
-                    height: 100vh;
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                    background-color: #0000008f;
-                    box-sizing: border-box;
-                    z-index: 9999999999;
-                `;
-                monitorAdImage(); // Start monitoring ad images for errors
+                $fixedWidthDiv.show();
+                $adPopup.css({
+                    width: '100%',
+                    height: '100vh',
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#0000008f',
+                    boxSizing: 'border-box',
+                    zIndex: 9999999999
+                });
+                monitorAdImage(); // Start monitoring the images in the ad
             }
         }
     }
 
-    window.addEventListener('scroll', showAd);
-
-    closePopupCross.addEventListener('click', function () {
-        adPopup.style.display = "none";
-        adPopup.setAttribute("id", "ad-closed");
-    });
+    $(window).on('scroll', showAd);
 })();
