@@ -13,8 +13,8 @@
             }
         }
         .fixed-width {
-            width: 300px; /* Set width to 300px */
-            height: 600px; /* Set height to 600px */
+            width: 300px;
+            height: 600px;
             display: none;
             background-color: #ffffff;
             border-radius: 4px;
@@ -76,7 +76,7 @@
 
     const closePopupCross = document.createElement('span');
     closePopupCross.className = 'close-btn';
-    closePopupCross.textContent = 'x'; // Set the text content to 'x'
+    closePopupCross.textContent = 'x';
 
     closePopupDiv.appendChild(ourPowerOfSpan);
     closePopupDiv.appendChild(closePopupCross);
@@ -86,12 +86,11 @@
 
     fixedWidthDiv.appendChild(closePopupDiv);
     fixedWidthDiv.appendChild(monetiscopePopupAd);
-
     adPopup.appendChild(fixedWidthDiv);
     document.body.appendChild(adPopup);
 
-    // Load Google GPT script with retry mechanism
-    function loadAdScript(retries = 10) {
+    // Load Google GPT script with retry
+    function loadAdScript(retries = 3) {
         const gptScript = document.createElement('script');
         gptScript.src = 'https://securepubads.g.doubleclick.net/tag/js/gpt.js';
         gptScript.async = true;
@@ -110,8 +109,8 @@
             if (retries > 0) {
                 console.error('Failed to load Google GPT script. Retrying...');
                 setTimeout(function () {
-                    loadAdScript(retries - 1); // Retry the script loading
-                }, 3000); // Retry after 3 seconds
+                    loadAdScript(retries - 1);
+                }, 3000);
             } else {
                 console.error('Failed to load Google GPT script after multiple attempts.');
                 adPopup.style.display = "none";
@@ -122,7 +121,33 @@
 
     loadAdScript(); // Initial load
 
-    // Show the ad when the user scrolls 200 pixels
+    // Monitor ad container for image load errors and refetch
+    function monitorAdImage(retries = 3) {
+        const adImages = monetiscopePopupAd.getElementsByTagName('img');
+
+        Array.from(adImages).forEach(image => {
+            image.onerror = function () {
+                if (retries > 0) {
+                    console.error('Ad image failed to load. Retrying...');
+
+                    // Refresh the ad slot
+                    googletag.cmd.push(function () {
+                        googletag.pubads().refresh([googletag.slotManager.getSlotById('monetiscopepopupad')]);
+                    });
+
+                    // Retry image monitoring after a short delay
+                    setTimeout(function () {
+                        monitorAdImage(retries - 1);
+                    }, 2000);
+                } else {
+                    console.error('Failed to load ad image after multiple attempts.');
+                    image.alt = 'Failed to load ad';
+                }
+            };
+        });
+    }
+
+    // Show the ad and monitor for failed image loads
     function showAd() {
         if (window.scrollY >= 200) {
             if (window.googletag) {
@@ -144,20 +169,15 @@
                     box-sizing: border-box;
                     z-index: 9999999999;
                 `;
-            } else {
-                console.log("ad-not-loaded");
-                adPopup.style.display = "none";
-                adPopup.setAttribute("id", "ad-closed");
+                monitorAdImage(); // Start monitoring ad images for errors
             }
-            window.removeEventListener('scroll', showAd); // Remove the scroll event listener after the ad is shown
         }
     }
 
     window.addEventListener('scroll', showAd);
 
-    // Close button functionality
     closePopupCross.addEventListener('click', function () {
-        adPopup.style.display = 'none';
-        adPopup.setAttribute('id', 'ad-closed');
+        adPopup.style.display = "none";
+        adPopup.setAttribute("id", "ad-closed");
     });
 })();
